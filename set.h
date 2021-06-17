@@ -1,9 +1,7 @@
 #pragma once
 #include <iostream>
 #include "list.h"
-
 using namespace std;
-
 class Set: public List
 {
 
@@ -34,7 +32,6 @@ public:
     Set Union(Set& set2); // объеденение двух множеств
     Set Difference(Set& set2); // разность двух множеств
     Set Intersection(Set& set2); // пересечение двух множеств
-    Set SymmetricDifference(Set& set2); // симметричная разность
 
     ///// перегрузка
     Set operator = (Set s){ return Assign(s); }
@@ -42,7 +39,10 @@ public:
     Set operator - (Set& set2) { return Difference(set2); }
     Set operator * (Set& set2) { return  Intersection(set2); }
 
+    void Sort() { Sort(this, Count());}
+
 private:
+    void Sort(Set* data, int len);
     using List::AddToHead, List::AddToTail, List::ListSize; // инкапсулируем методы которые мы заменили
 };
 
@@ -162,11 +162,6 @@ Set Set::Difference(Set &set2)
     return set;
 }
 
-Set Set::SymmetricDifference(Set &set2)
-{
-    Set set = Set(*this);
-}
-
 Set Set::Assign(Set s)
 {
     if (this != &s)
@@ -180,4 +175,20 @@ Set Set::Assign(Set s)
         }
     }
     return *this;
+}
+
+void Set::Sort(Set *data, int len)
+{
+    int key = 0;
+    int i = 0;
+    for(int j = 1; j < len; j++)
+    {
+        key = (*data)[j];
+        i = j - 1;
+        while (i >= 0 && (*data)[i] > key) {
+            (*data).SetIndex(i + 1, (*data)[i]);
+            i = i - 1;
+            (*data).SetIndex(i + 1, key);
+        }
+    }
 }
