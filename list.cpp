@@ -20,8 +20,6 @@ int main() {
     list2.AddToHead(34);
     list3.AddAfterPos(3, 24);
 
-    //list3.SetIndex(2, 45);
-
     cout << "list1: " << list1 << "size: " << list1.ListSize() << endl;
     cout << "list2: " << list2 << "size: " << list2.ListSize() << endl;
     cout << "list3: " << list3 << "size: " << list3.ListSize() << endl;
