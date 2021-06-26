@@ -22,6 +22,7 @@ public:
     void AddAfter(int val, Node* node); // добавить новое значение после указанной ноды
     void AddToHead(int val); // добавить значение в "голову"
     void AddToTail(int val); // добавить значение в "хвост"
+    void AddAfterPos(int pos, int val); // добавить новое значение после указанного индекса
 
     void DelTo(Node* node); // удаляем ноду
     void DelToHead();  // удаляем первую ноду(не "головную")
@@ -39,7 +40,7 @@ public:
     int ListSize(); // размер списка
 
     bool isEmpty(); // проверка списка на пустоту
-    void Clear(); 	// удаление списка, освобождение памяти
+    void Clear(); 	// очистка списка
 
     // некоторые операции и их перегрузка
     List& Assign(const List& l); // присваивание
@@ -49,9 +50,9 @@ public:
     List& operator + (const List& l){ return Sum(l);}
     List& operator += (const List& l){ return Sum(l);}
 
-    bool Equals(List l); // проверка на равенство
-    bool operator == (List l){ return Equals(l); }
-    bool operator != (List l){ return !Equals(l); }
+    bool Equals(List& l); // проверка на равенство
+    bool operator == (List& l){ return Equals(l); }
+    bool operator != (List& l){ return !Equals(l); }
 
     int GetIndex(int index); // получение значения по индексу
     int operator [] (int index) {return GetIndex(index); }
@@ -64,8 +65,13 @@ public:
     void Input(int size); // ввод значений списка из консоли
     friend istream& operator >> (istream& st, List& l);
 
-private:
+    void Sort(List *data, int len); // сортировка
+    void Sort() { return Sort(this, ListSize()); }
+
     void _init_base_();
+    Node* _get_head_(){ return head; }
+    Node* _get_tail_(){ return tail; }
+private:
     int listSize = 0;
 };
 
@@ -118,6 +124,10 @@ void List::AddToHead(int val)
 void List::AddToTail(int val)
 {
     AddAfter(val, (*tail).last);
+}
+void  List::AddAfterPos(int pos, int val)
+{
+    AddAfter(val, FindPos(pos));
 }
 void List::DelTo(Node *node)
 {
@@ -216,9 +226,8 @@ int List::ListSize()
 {
     return this->listSize;
 }
-bool List::Equals(List l)
+bool List::Equals(List& l)
 {
-    Print(); l.Print();
     if (l.listSize != this->listSize)
         return false;
 
@@ -295,4 +304,19 @@ int List::GetIndex(int index)
 void List::SetIndex(int index, int val)
 {
     FindPos(index)->val = val;
+}
+void List::Sort(List *data, int len)
+{
+    int key = 0;
+    int i = 0;
+    for(int j = 1; j < len; j++)
+    {
+        key = (*data)[j];
+        i = j - 1;
+        while (i >= 0 && (*data)[i] > key) {
+            (*data).SetIndex(i + 1, (*data)[i]);
+            i = i - 1;
+            (*data).SetIndex(i + 1, key);
+        }
+    }
 }
